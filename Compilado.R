@@ -113,9 +113,9 @@ t1 <-
   )+
   scale_fill_brewer(palette = "Set2") +
   labs(title = "Peliculas y Series producidas según continente",
-       subtitle = " Peliculas y Series producidas de Netflix según continente, entre los años ",
+       #subtitle = "",
        x='Continente', 
-       y='n')
+       y='Cantidad de Peliculas/Series')
 
 # tipo peliculas o series segun continente --------------------------------
 #norteamerica tipo ------------------------------------------------------------
@@ -481,9 +481,9 @@ genero <-
                              "#F89217", "#F06719","#E03426","#FC719E",
                              "#EB73B3","#CE69BE","#7873C0", "#4F7CBA"))+
   labs(title = "Peliculas y Series producidas según genero",
-       subtitle = " Peliculas y Series producidas de Netflix según genero",
-       x='genero', 
-       y='n')
+      ## subtitle = " Peliculas y Series producidas de Netflix según genero",
+       x='Genero', 
+       y='Cantidad de Peliculas y Series')
 
 # top20Directores ---------------------------------------------------------
 
@@ -514,9 +514,38 @@ d1 <-
   geom_bar( stat="identity", show.legend = FALSE) +
   coord_flip()+
   labs(title = "Top 20 - directores de peliculas y series de Netflix",
-       x = "Word", 
-       y = "Word Count") +
+       x = "Directores", 
+       y = "Cantidad de Directores") +
   geom_label(aes(fill = director),
+             colour = "white", 
+             fontface = "bold", 
+             show.legend = FALSE)
+
+
+# PeliculasOriginalesNetflix ----------------------------------------------
+#solo peliculas 6126
+Orig_pelicula <- 
+  Netflix_Merge %>% 
+  select(or_netflix) %>% 
+  filter(!is.na(or_netflix)) %>% 
+  count(or_netflix) 
+
+Orig_pelicula <- 
+  Orig_pelicula %>% 
+  mutate(porcent = (n/sum(n)) *100)
+
+
+# grafico -----------------------------------------------------------------
+
+op1 <- 
+  Orig_pelicula %>% 
+  ggplot(aes(x = or_netflix, y = porcent, fill = or_netflix)) +
+  geom_bar(stat="identity", show.legend = FALSE) +
+  scale_y_continuous(labels = scales::percent_format(scale = 1))+
+  labs(title = "Peliculas Originales de Netflix",
+       x = "Originales", 
+       y = "Porcentajes") +
+  geom_label(aes( label = paste0(round(porcent),"%"), fill = or_netflix),
              colour = "white", 
              fontface = "bold", 
              show.legend = FALSE)
