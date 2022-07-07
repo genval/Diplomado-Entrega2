@@ -475,15 +475,17 @@ genero <-
     position = position_dodge(0.9),
     vjust = 1
   )+
-  #scale_fill_brewer(palette = "Set3") +
   scale_fill_manual(values=c("#1BA3C6", "#2CB5C0","#30BCAD", "#33A65C",
                              "#33A65C","#A2B627","#D5BB21","#F8B620",
                              "#F89217", "#F06719","#E03426","#FC719E",
                              "#EB73B3","#CE69BE","#7873C0", "#4F7CBA"))+
   labs(title = "Peliculas y Series producidas según genero",
-      ## subtitle = " Peliculas y Series producidas de Netflix según genero",
        x='Genero', 
-       y='Cantidad de Peliculas y Series')
+       y='Cantidad de Peliculas y Series')+
+  geom_label(aes(label = n, fill = genero),
+             colour = "white", 
+             fontface = "bold", 
+             show.legend = FALSE)
 
 # top20Directores ---------------------------------------------------------
 
