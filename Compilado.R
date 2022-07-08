@@ -95,8 +95,7 @@ total <- merge(total, africa, all = TRUE)
 
 # grafico continentes -----------------------------------------------------
 
-
-t1 <- 
+t1 <-
   total %>% 
   filter(variable == TRUE) %>% 
   mutate( continente = fct_reorder(continente, n,.desc = TRUE)) %>% 
@@ -104,14 +103,23 @@ t1 <-
   geom_bar(aes(y = n), 
            stat = "identity", 
            position = "dodge",
-           width = 0.75) + 
+           width = 0.75,
+           show.legend = FALSE) + 
   scale_x_discrete() +
-  geom_text(
-    aes(label = n, y = n + 0.05),
-    position = position_dodge(0.9),
-    vjust = 1
-  )+
-  scale_fill_brewer(palette = "Set2") +
+#  geom_text(aes(label = n, y = n + 0.05),
+ #           position = position_dodge(0.9),
+  #          vjust = 1)+
+  theme_light()+
+  theme(panel.border = element_blank(),
+        panel.grid.major.x  = element_blank(),
+        panel.grid.major.y = element_line( size=.1, color="white"))+
+ # theme(axis.text.x  = element_text(angle=90, hjust = 1))+
+  #theme(axis.text.x = element_text(size = 10))+
+  #scale_fill_brewer(palette = "Set2") +
+  geom_label(aes( label = n, fill = continente),
+             colour = "white", 
+             fontface = "bold", 
+             show.legend = FALSE)+
   labs(title = "Peliculas y Series producidas según continente",
        #subtitle = "",
        x='Continente', 
@@ -470,17 +478,22 @@ genero <-
            position = "dodge",
            width = 0.75) + 
   scale_x_discrete() +
-  geom_text(
-    aes(label = n, y = n + 0.05),
-    position = position_dodge(0.9),
-    vjust = 1
-  )+
-  scale_fill_manual(values=c("#1BA3C6", "#2CB5C0","#30BCAD", "#33A65C",
-                             "#33A65C","#A2B627","#D5BB21","#F8B620",
-                             "#F89217", "#F06719","#E03426","#FC719E",
-                             "#EB73B3","#CE69BE","#7873C0", "#4F7CBA"))+
-  labs(title = "Peliculas y Series producidas según genero",
-       x='Genero', 
+  #geom_text(aes(label = n, y = n + 0.05),
+  #          position = position_dodge(0.9),
+   #         vjust = 1)+
+  #scale_fill_manual(values=c("#1BA3C6", "#2CB5C0","#30BCAD", "#33A65C",
+   #                          "#33A65C","#A2B627","#D5BB21","#F8B620",
+  #                           "#F89217", "#F06719","#E03426","#FC719E",
+   #                          "#EB73B3","#CE69BE","#7873C0", "#4F7CBA"))+
+  theme_light()+
+  theme(panel.border = element_blank(),
+        panel.grid.major.x  = element_blank(),
+        panel.grid.major.y = element_line( size=.1, color="white"))+
+  theme(axis.text.x  = element_text(angle=90, hjust = 1))+
+  theme(axis.text.x = element_text(size = 10),
+        legend.position = "none")+
+  labs(title = "Peliculas y Series producidas según género",
+       x='Género', 
        y='Cantidad de Peliculas y Series')+
   geom_label(aes(label = n, fill = genero),
              colour = "white", 
@@ -518,6 +531,12 @@ d1 <-
   labs(title = "Top 20 - directores de peliculas y series de Netflix",
        x = "Directores", 
        y = "Cantidad de Directores") +
+  theme_light()+
+  theme(panel.border = element_blank(),
+        panel.grid.major.x  = element_blank(),
+        panel.grid.major.y = element_line( size=.1, color="white"))+
+  theme(axis.text.x  = element_text(angle=0, hjust = 1))+
+  theme(axis.text.x = element_text(size = 10))+
   geom_label(aes(fill = director),
              colour = "white", 
              fontface = "bold", 
@@ -547,8 +566,42 @@ op1 <-
   labs(title = "Peliculas Originales de Netflix",
        x = "Originales", 
        y = "Porcentajes") +
+  theme_light()+
+  theme(panel.border = element_blank(),
+        panel.grid.major.x  = element_blank(),
+        panel.grid.major.y = element_line( size=.1, color="white"))+
+  theme(axis.text.x  = element_text(angle=0, hjust = 1))+
+  theme(axis.text.x = element_text(size = 10))+
   geom_label(aes( label = paste0(round(porcent),"%"), fill = or_netflix),
              colour = "white", 
              fontface = "bold", 
              show.legend = FALSE)
 
+
+# FrecuenciaRating --------------------------------------------------------
+
+
+rating <- 
+  Netflix_Merge %>% 
+  select(rating) %>% 
+  count(rating) %>% 
+  filter(!is.na(rating)) %>% 
+  arrange(-n)
+
+rating %>% 
+  mutate( rating = fct_reorder(rating, n,.desc = TRUE)) %>% 
+  ggplot(aes(x = rating, y = n, fill = rating)) +
+  geom_bar(aes(x = rating, y = n), stat="identity", show.legend = FALSE) +
+  theme_light()+
+  theme(panel.border = element_blank(),
+        panel.grid.major.x  = element_blank(),
+        panel.grid.major.y = element_line( size=.1, color="white"))+
+  theme(axis.text.x  = element_text(angle=90, hjust = 1))+
+  theme(axis.text.x = element_text(size = 10))+
+  labs(title = "Clasificación de Peliculas y Series de Netflix",
+       x = "Clasificación", 
+       y = "Frecuencia") +
+  geom_label(aes( label = n, fill = rating),
+             colour = "white", 
+             fontface = "bold", 
+             show.legend = FALSE)
